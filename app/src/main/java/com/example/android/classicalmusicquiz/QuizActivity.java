@@ -27,7 +27,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.exoplayer2.DefaultLoadControl;
@@ -158,6 +157,15 @@ public class QuizActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    /**
+     * Release ExoPlayer.
+     */
+    private void releasePlayer()
+    {
+        mExoplayer.stop();
+        mExoplayer.release();
+        mExoplayer = null;
+    }
 
     /**
      * The OnClick method for all of the answer buttons. The method uses the index of the button
@@ -221,6 +229,9 @@ public class QuizActivity extends AppCompatActivity implements View.OnClickListe
             int buttonSampleID = mQuestionSampleIDs.get(i);
 
             mButtons[i].setEnabled(false);
+            // show composer to help show what the correct answer is
+            mPlayerView.setDefaultArtwork(Sample.getComposerArtBySampleID(this, mAnswerSampleID));
+
             if (buttonSampleID == mAnswerSampleID) {
                 mButtons[i].getBackground().setColorFilter(ContextCompat.getColor
                                 (this, android.R.color.holo_green_light),
@@ -234,5 +245,19 @@ public class QuizActivity extends AppCompatActivity implements View.OnClickListe
 
             }
         }
+    }
+
+    /*
+     * We are releasing the ExoPlayer in onDestroy instead of onPause or onStop because
+     * we want the music to continue if the app is not visible.
+     */
+
+    /**
+     * Release the player when the Activity is destroyed.
+     */
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        releasePlayer();
     }
 }
