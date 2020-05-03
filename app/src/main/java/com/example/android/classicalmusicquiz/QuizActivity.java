@@ -59,13 +59,12 @@ public class QuizActivity extends AppCompatActivity implements View.OnClickListe
     private SimpleExoPlayerView mPlayerView;
     private SimpleExoPlayer mExoplayer;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz);
 
-        // initialize player view
+        // Initialize the player view.
         mPlayerView = (SimpleExoPlayerView) findViewById(R.id.playerView);
 
         boolean isNewGame = !getIntent().hasExtra(REMAINING_SONGS_KEY);
@@ -87,7 +86,7 @@ public class QuizActivity extends AppCompatActivity implements View.OnClickListe
         mQuestionSampleIDs = QuizUtils.generateQuestion(mRemainingSampleIDs);
         mAnswerSampleID = QuizUtils.getCorrectAnswerID(mQuestionSampleIDs);
 
-        // Load the question mark as the background image until player answers the question.
+        // Load the question mark as the background image until the user answers the question.
         mPlayerView.setDefaultArtwork(BitmapFactory.decodeResource(getResources(),
                 R.drawable.question_mark));
 
@@ -108,7 +107,7 @@ public class QuizActivity extends AppCompatActivity implements View.OnClickListe
             return;
         }
 
-        // initialize the player
+        // Initialize the player.
         initializePlayer(Uri.parse(answerSample.getUri()));
     }
 
@@ -142,13 +141,13 @@ public class QuizActivity extends AppCompatActivity implements View.OnClickListe
     {
         if (mExoplayer == null)
         {
-            // create an instance of the exoplayer
+            // Create an instance of the Exoplayer
             TrackSelector trackSelector = new DefaultTrackSelector();
             LoadControl loadControl = new DefaultLoadControl();
             mExoplayer = ExoPlayerFactory.newSimpleInstance(this, trackSelector, loadControl);
             mPlayerView.setPlayer(mExoplayer);
 
-            // prepare the media source
+            // Prepare the MediaSource.
             String userAgent = Util.getUserAgent(this, "ClassicalMusicQuiz");
             MediaSource mediaSource = new ExtractorMediaSource(mediaUri, new DefaultDataSourceFactory(
                     this, userAgent), new DefaultExtractorsFactory(), null, null);
@@ -212,6 +211,8 @@ public class QuizActivity extends AppCompatActivity implements View.OnClickListe
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
+                // Stop the playback when you go to the next question.
+                mExoplayer.stop();
                 Intent nextQuestionIntent = new Intent(QuizActivity.this, QuizActivity.class);
                 nextQuestionIntent.putExtra(REMAINING_SONGS_KEY, mRemainingSampleIDs);
                 finish();
@@ -222,7 +223,8 @@ public class QuizActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     /**
-     * Disables the buttons and changes the background colors to show the correct answer.
+     * Disables the buttons and changes the background colors and composer art
+     * to show the correct answer.
      */
     private void showCorrectAnswer() {
         for (int i = 0; i < mQuestionSampleIDs.size(); i++) {
