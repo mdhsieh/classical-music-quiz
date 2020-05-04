@@ -32,13 +32,19 @@
         <activity android:name=".QuizActivity"
             android:launchMode="singleTop"/>
 
-        <!--Add MediaButtonReceiver to app under the Activity that controls the media.
-        This is required on devices below Android 5.0-->
-        <receiver android:name="android.support.v4.media.session.MediaButtonReceiver" >
+        <receiver android:name=".QuizActivity$MediaReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.MEDIA_BUTTON" />
             </intent-filter>
         </receiver>
+
+        <!--Add MediaButtonReceiver to app under the Activity that controls the media.
+        This is required on devices below Android 5.0-->
+        <!--<receiver android:name="android.support.v4.media.session.MediaButtonReceiver" >
+            <intent-filter>
+                <action android:name="android.intent.action.MEDIA_BUTTON" />
+            </intent-filter>
+        </receiver>-->
 
     </application>
 
